@@ -1,0 +1,10 @@
+a
+q1 q0 q2
+q0
+q1 q0
+q0 epsilon q1
+q0 epsilon q2
+q1 epsilon q0
+q1 epsilon q2
+q2 a q1
+q2 epsilon q0
