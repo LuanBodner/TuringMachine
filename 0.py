@@ -1,6 +1,13 @@
 #coding:latin
 
 import sys
+#Definição das linhas
+#1 Alfabeto de entrada
+#2 alfabeto da fita
+#3 simbolo que representa o espaço branco na fita
+#4 estado inicial
+#5 conjunto de estados de aceitação
+#6+ transições no formato :estado_atual simbolo_atual novo_estado novo_simbolo direcao_da_cabeca 
 
 
 def leia_arquivo(arquivo):
