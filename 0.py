@@ -18,7 +18,7 @@ def leia_arquivo(arquivo):
         texto.append(linha.replace("\n", ""))
     return texto
 
-class AutomatoFinito(object):
+class TuringMachine(object):
     def __init__(self, alfabeto, estados, estados_iniciais, estados_aceitacao, transicoes):
         self.alfabeto = alfabeto
         self.estados = estados
