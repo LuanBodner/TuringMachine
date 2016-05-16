@@ -18,9 +18,11 @@ def leia_arquivo(arquivo):
         texto.append(linha.replace("\n", ""))
     return texto
 
-class AutomatoFinito(object):
-    def __init__(self, alfabeto, estados, estados_iniciais, estados_aceitacao, transicoes):
+class TuringMachine(object):
+    def __init__(self, alfabeto, alfabeto_fita, simbolo_branco, estados, estados_iniciais, estados_aceitacao, transicoes):
         self.alfabeto = alfabeto
+        self.alfabeto_fita = alfabeto_fita
+        self.simbolo_branco = simbolo_branco
         self.estados = estados
         self.estados_iniciais = estados_iniciais
         self.estados_aceitacao = estados_aceitacao
@@ -38,20 +40,32 @@ class AutomatoFinito(object):
         return proximos_estados
 
 def prepara_automato(texto_cru):
+	
     alfabeto = texto_cru[0].split(' ')
     print("#alfabeto " + str(texto_cru[0].split(' ')))
-    estados = texto_cru[1].split(' ')
-    print("#    estados " + str(texto_cru[1].split(' ')))
-    estados_iniciais = texto_cru[2].split(' ')
-    print("#estados_iniciais " + str(texto_cru[2].split(' ')))
-    estados_aceitacao = texto_cru[3].split(' ')
-    print("#estados_aceitacao " + str(texto_cru[3].split(' ')))
+    
+    alfabeto_fita = texto_cru[1].split(' ')
+    print("#alfabeto_fita " + str(texto_cru[1].split(' ')))
+    
+    simbolo_branco = texto_cru[2].split
+    print("#simbolo_branco " + str(texto_cru[2].split(' ')))
+    
+    estados = texto_cru[3].split(' ')
+    print("#estados " + str(texto_cru[3].split(' ')))
+    
+    estados_iniciais = texto_cru[4].split(' ')
+    print("#estados_iniciais " + str(texto_cru[4].split(' ')))
+    
+    estados_aceitacao = texto_cru[5].split(' ')
+    print("#estados_aceitacao " + str(texto_cru[5].split(' ')))    
+    
     transicoes =  []
 
-    for t in texto_cru[4:]:
+    for t in texto_cru[6:]:
         transicoes.append(t.split(' '))
+        print("#transicao " + str(t.split(' ')))    
 
-    return AutomatoFinito(alfabeto, estados, estados_iniciais, estados_aceitacao, transicoes)
+    return TuringMachine(alfabeto, alfabeto_fita, simbolo_branco ,estados, estados_iniciais, estados_aceitacao, transicoes)
 
 def executa(af, estados_atuais, simbolo):
     proximos_estados = []
