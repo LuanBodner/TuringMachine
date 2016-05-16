@@ -15,12 +15,14 @@ def leia_arquivo(arquivo):
     """
     texto = []
     for linha in open(arquivo):
-        texto.append(linha.replace("\n", ""))
+        texto.append(linha.replace("\r\n", ""))
     return texto
 
 class TuringMachine(object):
-    def __init__(self, alfabeto, estados, estados_iniciais, estados_aceitacao, transicoes):
+    def __init__(self, alfabeto, alfabeto_fita, simbolo_branco, estados, estados_iniciais, estados_aceitacao, transicoes):
         self.alfabeto = alfabeto
+        self.alfabeto_fita = alfabeto_fita
+        self.simbolo_branco = simbolo_branco
         self.estados = estados
         self.estados_iniciais = estados_iniciais
         self.estados_aceitacao = estados_aceitacao
@@ -56,21 +58,33 @@ class TuringMachine(object):
         return proximos_estados
 
 def prepara_automato(texto_cru):
+	
     alfabeto = texto_cru[0].split(' ')
-    #print("#alfabeto " + str(texto_cru[0].split(' ')))
-    estados = texto_cru[1].split(' ')
-    #print("#estados " + str(texto_cru[1].split(' ')))
-    estados_iniciais = texto_cru[2].split(' ')
-    #print("#estados_iniciais " + str(texto_cru[2].split(' ')))
-    estados_aceitacao = texto_cru[3].split(' ')
-    #print("#estados_aceitacao " + str(texto_cru[3].split(' ')))
+    print("#alfabeto " + str(texto_cru[0].split(' ')))
+    
+    alfabeto_fita = texto_cru[1].split(' ')
+    print("#alfabeto_fita " + str(texto_cru[1].split(' ')))
+    
+    simbolo_branco = texto_cru[2].split
+    print("#simbolo_branco " + str(texto_cru[2].split(' ')))
+    
+    estados = texto_cru[3].split(' ')
+    print("#estados " + str(texto_cru[3].split(' ')))
+    
+    estados_iniciais = texto_cru[4].split(' ')
+    print("#estados_iniciais " + str(texto_cru[4].split(' ')))
+    
+    estados_aceitacao = texto_cru[5].split(' ')
+    print("#estados_aceitacao " + str(texto_cru[5].split(' ')))    
+    
     transicoes =  []
 
-    for t in texto_cru[4:]:
+    for t in texto_cru[6:]:
         transicoes.append(t.split(' '))
+        print("#transicao " + str(t.split(' ')))    
 
-    return AutomatoFinito(alfabeto, estados, estados_iniciais, estados_aceitacao, transicoes)
-
+    return TuringMachine(alfabeto, alfabeto_fita, simbolo_branco ,estados, estados_iniciais, estados_aceitacao, transicoes)
+"""
 def executa(af, estados_atuais, simbolo):
     proximos_estados = []
     estados_epsilons = []
@@ -101,7 +115,7 @@ def executa(af, estados_atuais, simbolo):
 
     #print(proximos_estados)
     return proximos_estados
-
+"""
 
 
 def main():
@@ -110,7 +124,8 @@ def main():
 
     texto_cru = leia_arquivo(sys.argv[1])
     af = prepara_automato(texto_cru)
-
+	
+    """
     estados_atuais = af.estados_iniciais
     palavra =input("Digite a palavra a analisar, com os caracteres separados por espaços:").strip()
 
@@ -135,6 +150,7 @@ def main():
         print("Palavra aceita.")
     else:
             print("Palavra recusada.")
+	"""
 
 
 

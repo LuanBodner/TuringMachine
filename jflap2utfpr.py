@@ -29,7 +29,7 @@ class Jflap2Utfpr(object):
 		self.finalStates = set()
 		self.transitions = set()
 
-	def convert(self, inputFile, outputFile, blankSymbol = 'B', alphabet = None):
+	def convert(self, inputFile, outputFile, blankSymbol = '!', alphabet = None):
 		if alphabet is None:
 			self.alphabet = self.tapeSymbols
 		else:
