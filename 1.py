@@ -9,6 +9,10 @@ BCC-4
 """
 
 import sys
+import copy
+
+simbolo_branco = "!"
+maquinas = []
 
 def leia_arquivo(arquivo):
     """Lê o arquivo, retornando uma lista com as strings.
@@ -19,27 +23,61 @@ def leia_arquivo(arquivo):
     return texto
 
 class TuringMachine(object):
-    def __init__(self, alfabeto, alfabeto_fita, simbolo_branco, estados, estados_iniciais, estados_aceitacao, transicoes):
+    def __init__(self, alfabeto, alfabeto_fita, simbolo_branco, estados, estado_inicial, estados_aceitacao, transicoes, fita="", pos=0):
         self.alfabeto = alfabeto
         self.alfabeto_fita = alfabeto_fita
         self.simbolo_branco = simbolo_branco
         self.estados = estados
-        self.estados_iniciais = estados_iniciais
+        self.estado_inicial = estados_iniciais
         self.estados_aceitacao = estados_aceitacao
         self.transicoes = transicoes
 
+		self.fita = fita
+		self.pos = pos
+
     def __repr__(self):
-        return "Alfabeto: " + str(self.alfabeto) + "\nestados: " + str(self.estados) + "\nestados_iniciais: " + str(self.estados_iniciais) + "\nEstados_aceitacao:
-"         + str(self.estados_aceitacao) + "\ntransicoes: " + str(self.transicoes)
+        return "Alfabeto: " + str(self.alfabeto) + "\nestados: " + str(self.estados) + "\nestado_inicial: " + str(self.estados_iniciais) + "\nEstados_aceitacao:"+ str(self.estados_aceitacao) + "\ntransicoes: " + str(self.transicoes)
 
     def transicoes_possiveis(self, estado_inicial, simbolo):
-        proximos_estados = []
+        self.proximos_estados = []
+		ocorrencias = 0
+
         for t in self.transicoes:
-            if t[0] == estado_inicial and (t[1] == simbolo or t[1] == 'B'):
-                proximos_estados.append(t[2])
+            if t[0] == estado_inicial and (t[1] == simbolo or t[1] == simbolo_branco ):
+
+			if ocorrencias > 1 :
+				#nao determinismo
+				tm2 = copy.deepcopy(self)
+				tm2.proximos_estados.append(t[2])
+				maquinas.append(tm2)
+			else:
+				ocorrencias++
+				self.proximos_estados.append(t[2])
+
+			#TODO se o simbolo de transição (t[1]) for !, criar uma nova tm e adiciona-la na liosta de tm
         return proximos_estados
 
-def prepara_automato(texto_cru):
+
+def executa(af):
+	#estados_atuais é af.estado_inicial
+	#simbolo é af.fita[af.pos]
+    proximos_estados = []
+    for estado in af.estado_inicial:
+        estados_temporarios = af.transicoes_possiveis(estado, af.fita[af.pos])
+        for e in estados_temporarios:
+            if not e in proximos_estados:
+                proximos_estados.append(e)
+	
+	aceito = False
+	af.estado_inicial = proximos_estados
+
+	for estado in af.estado_inicial:
+		if estado in af.estados_aceitacao:
+			aceito = True
+			
+    return aceito
+
+def prepara_tms(texto_cru):
 	
     alfabeto = texto_cru[0].split(' ')
     print("#alfabeto " + str(texto_cru[0].split(' ')))
@@ -65,42 +103,30 @@ def prepara_automato(texto_cru):
         transicoes.append(t.split(' '))
         print("#transicao " + str(t.split(' ')))    
 
-    return TuringMachine(alfabeto, alfabeto_fita, simbolo_branco ,estados, estados_iniciais, estados_aceitacao, transicoes)
-
-def executa(af, estados_atuais, simbolo):
-    proximos_estados = []
-    for estado in estados_atuais:
-        estados_temporarios = af.transicoes_possiveis(estado, simbolo)
-        for e in estados_temporarios:
-            if not e in proximos_estados:
-                proximos_estados.append(e)
-    return proximos_estados
-
-
+	for estado in estados_iniciais:
+		maquinas.append( TuringMachine(alfabeto, alfabeto_fita, simbolo_branco ,estados, estado, estados_aceitacao, transicoes))
+	
+	return maquinas
 
 def main():
     if len(sys.argv) !=2:
-        #
         return
 
     texto_cru = leia_arquivo(sys.argv[1])
-    af = prepara_automato(texto_cru)
+	maquinas = prepara_tms(texto_cru)
+    #af = prepara_automato(texto_cru)
 
-    print(af)
 
-    estados_atuais = af.estados_iniciais
-    palavras = input("Digite a palavra a analisar, com os caracteres separados por espaços:")
-    for simbolo in palavras.split(' '):
-        print("Estado(s) atual(is): " + str(estados_atuais ))
-        print("Fazendo transição com o símbolo " + simbolo + ".")
-        estados_atuais = executa(af, estados_atuais, simbolo)
-        print("Estado(s) após a transição: " + str(estados_atuais ))
+    fita = input("Digite a palavra a analisar, com os caracteres separados por espaços:")
+	for tm in maquinas:
+		tm.fita = fita
 
-    aceito = False
-    for x in estados_atuais:
-        if x in af.estados_aceitacao:
-            aceito = True
-            break
+	aceito = False	
+		for tm in maquinas:
+			aceito = exeuta(tm)
+
+		if aceito == True:
+			break
 
     if aceito:
         print("Palavra aceita.")
