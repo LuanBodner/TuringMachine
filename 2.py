@@ -85,7 +85,9 @@ class TM(object):
             if conf.estado in self.aceitacao:
                 return True
             else:
-                return False
+                continue
+
+        return False
 
 def leia_arquivo():
 
