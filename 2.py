@@ -14,7 +14,7 @@ class configuracao(object):
 
     def moveRight(self):
         self.pos+= 1
-        if self.pos > len(self.fita):
+        if self.pos > len(self.fita) -1:
             self.fita.append(simbolo_branco)
 
     def moveLeft(self):
@@ -145,5 +145,13 @@ if __name__ == "__main__":
         print( step )
         step += 1
         turing_machines.step() 
+
+        #Se houver mais de 500 passos
+        #Verifica se a execucao deve continuar
+        if step % 500 == 0 :
+            op = input("{0} configuracoes geradas. Continuar ? [s/n]".format(step))
+            if op.count('n') > 0:
+                print("Termino de Execucao")
+                sys.exit(0)
     
     print("Palavra aceita")
